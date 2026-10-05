@@ -1,6 +1,6 @@
 {
   "name": "@fibber/translate",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "LLM translation of ICU messages — the base prompt and options behind `fibber translate`",
   "license": "MIT",
   "repository": {

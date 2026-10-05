@@ -1,6 +1,6 @@
 {
   "name": "@fibber/schema",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Message contract types and runtime validation",
   "license": "MIT",
   "repository": {

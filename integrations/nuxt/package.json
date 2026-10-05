@@ -1,7 +1,7 @@
 {
   "name": "@fibber/nuxt",
-  "version": "0.0.0",
-  "description": "Nuxt module for Fibber \u2014 builds the app's messages, loads one locale per visitor, and provides `$t`",
+  "version": "0.0.1",
+  "description": "Nuxt module for Fibber — builds the app's messages, loads one locale per visitor, and provides `$t`",
   "license": "MIT",
   "repository": {
     "type": "git",

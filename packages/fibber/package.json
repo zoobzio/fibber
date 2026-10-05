@@ -1,6 +1,6 @@
 {
   "name": "fibber-lang",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Umbrella package for the Fibber runtime",
   "license": "MIT",
   "repository": {

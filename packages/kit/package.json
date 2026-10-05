@@ -1,6 +1,6 @@
 {
   "name": "@fibber/kit",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Build kit: enumerated content to per-locale JSON and typed modules",
   "license": "MIT",
   "repository": {

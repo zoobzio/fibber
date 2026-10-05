@@ -1,6 +1,6 @@
 {
   "name": "@fibber/catalog",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Locale catalogs: providers and wire-protocol clients",
   "license": "MIT",
   "repository": {

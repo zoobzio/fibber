@@ -1,0 +1,31 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "unicorn", "oxc"],
+  "categories": {
+    "correctness": "error"
+  },
+  "env": {
+    "builtin": true
+  },
+  "ignorePatterns": [
+    "**/dist/",
+    "**/.dist/",
+    "**/.nuxt/",
+    "**/.output/",
+    "**/.generated/"
+  ],
+  "rules": {
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "typescript/consistent-type-imports": "error",
+    "typescript/no-empty-object-type": "error",
+    "typescript/no-explicit-any": "error"
+  },
+  "overrides": [
+    {
+      /* Generator scripts run under node, whose runtime globals the browserless
+         default config does not declare. */
+      "files": ["**/scripts/**/*.mjs"],
+      "env": { "node": true }
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "title": {
+    "defaultMessage": "Fibber example",
+    "description": "The page heading."
+  },
+  "pending": {
+    "defaultMessage": "This message has no translation yet, so every locale shows the source.",
+    "description": "Deliberately left untranslated, to show the fallback."
+  }
+}

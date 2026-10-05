@@ -1,0 +1,39 @@
+{
+  "name": "@fibber/core",
+  "version": "0.0.0",
+  "description": "The Fibber runtime service — deliver, resolve and format messages",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zoobzio/fibber.git",
+    "directory": "packages/core"
+  },
+  "type": "module",
+  "main": "./.dist/index.mjs",
+  "types": "./.dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./.dist/index.d.ts",
+      "import": "./.dist/index.mjs"
+    }
+  },
+  "files": [
+    ".dist",
+    "THIRD_PARTY_LICENSES.md"
+  ],
+  "scripts": {
+    "build": "unbuild",
+    "stub": "unbuild --stub",
+    "lint": "oxlint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@fibber/schema": "workspace:*"
+  },
+  "devDependencies": {
+    "@fibber/kit": "workspace:*",
+    "@formatjs/icu-messageformat-parser": "3.5.20",
+    "intl-messageformat": "12.1.2"
+  }
+}

@@ -1,0 +1,23 @@
+# Pre-1.0: report coverage on PRs but never block a merge on it. Flip
+# informational to false (or raise a target) once a coverage bar is worth
+# enforcing.
+coverage:
+  status:
+    project:
+      default:
+        informational: true
+    patch:
+      default:
+        informational: true
+
+comment:
+  layout: "condensed_header, diff, files"
+  require_changes: true
+
+# Coverage is computed against source; generated build output and tests never
+# count toward it.
+ignore:
+  - "**/.dist"
+  - "**/*.test.ts"
+  - "**/test/**"
+  - "examples/**"

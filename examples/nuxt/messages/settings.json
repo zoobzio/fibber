@@ -1,0 +1,10 @@
+{
+  "language": {
+    "defaultMessage": "Language",
+    "description": "Label of the language picker."
+  },
+  "timeZone": {
+    "defaultMessage": "Time zone",
+    "description": "Label of the time zone picker."
+  }
+}

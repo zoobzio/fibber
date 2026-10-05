@@ -1,0 +1,34 @@
+{
+  "name": "@fibber/catalog",
+  "version": "0.0.0",
+  "description": "Locale catalogs: providers and wire-protocol clients",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zoobzio/fibber.git",
+    "directory": "packages/catalog"
+  },
+  "type": "module",
+  "main": "./.dist/index.mjs",
+  "types": "./.dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./.dist/index.d.ts",
+      "import": "./.dist/index.mjs"
+    }
+  },
+  "files": [
+    ".dist"
+  ],
+  "scripts": {
+    "build": "unbuild",
+    "stub": "unbuild --stub",
+    "lint": "oxlint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@fibber/schema": "workspace:*",
+    "objectively": "^0.1.1"
+  }
+}

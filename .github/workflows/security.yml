@@ -1,0 +1,54 @@
+name: Security
+
+# Event-driven only — no scheduled scans. Every push to main and every PR
+# targeting it gets a static-analysis pass; PRs additionally get a supply-chain
+# review of the dependencies they add.
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: security-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # Static analysis over the JavaScript/TypeScript source. build-mode: none
+  # analyses source directly, so no workspace build is required.
+  codeql:
+    name: CodeQL
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript
+          build-mode: none
+      - name: Analyze
+        uses: github/codeql-action/analyze@v3
+
+  # Diffs the PR's dependency manifests against the base and fails on newly
+  # introduced high-severity advisories or known-malicious packages. PR-only:
+  # there is no base to diff against on a push.
+  dependency-review:
+    name: Dependency review
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high
+          comment-summary-in-pr: on-failure

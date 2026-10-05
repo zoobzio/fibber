@@ -1,0 +1,21 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.1.1/schema.json",
+  "changelog": ["@changesets/changelog-github", { "repo": "zoobzio/fibber" }],
+  "commit": false,
+  "access": "public",
+  "baseBranch": "main",
+  "fixed": [
+    [
+      "fibber",
+      "@fibber/catalog",
+      "@fibber/core",
+      "@fibber/kit",
+      "@fibber/schema",
+      "@fibber/translate",
+      "@fibber/nuxt"
+    ]
+  ],
+  "linked": [],
+  "updateInternalDependencies": "patch",
+  "ignore": ["@fibber/example-nuxt"]
+}

@@ -1,0 +1,6 @@
+{
+  "greeting": "Bonjour, {name} !",
+  "title": "Bienvenue",
+  "inbox": "{count, plural, one {# nouveau message} other {# nouveaux messages}}",
+  "retired": "Ancien message"
+}

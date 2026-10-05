@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "types": ["node", "@nuxt/nitro-server"],
+    "declaration": true,
+    "declarationMap": true,
+    "outDir": "../nuxt/.dist",
+    "rootDir": "../nuxt",
+    "paths": {
+      "#app": ["../nuxt/src/stubs/app.d.ts"],
+      "#imports": ["../nuxt/src/stubs/imports.d.ts"],
+      "#build/fibber/index.mjs": ["../nuxt/src/stubs/build/fibber/index.d.mts"],
+      "#build/fibber/bundles.mjs": [
+        "../nuxt/src/stubs/build/fibber/bundles.d.mts"
+      ]
+    }
+  },
+  "include": ["../nuxt/src", "../nuxt/test"]
+}

@@ -1,0 +1,10 @@
+{
+  "total": {
+    "defaultMessage": "Total: {amount, number, price}",
+    "description": "An order total, in the `price` named format."
+  },
+  "updated": {
+    "defaultMessage": "Last updated {at, date, long} at {at, time, short}",
+    "description": "A timestamp, shown in the visitor's time zone."
+  }
+}

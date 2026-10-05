@@ -1,0 +1,39 @@
+{
+  "name": "fibber",
+  "version": "0.0.0",
+  "description": "Umbrella package for the Fibber runtime",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zoobzio/fibber.git",
+    "directory": "packages/fibber"
+  },
+  "type": "module",
+  "main": "./.dist/index.mjs",
+  "types": "./.dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./.dist/index.d.ts",
+      "import": "./.dist/index.mjs"
+    },
+    "./catalog": {
+      "types": "./.dist/catalog.d.ts",
+      "import": "./.dist/catalog.mjs"
+    }
+  },
+  "files": [
+    ".dist"
+  ],
+  "scripts": {
+    "build": "unbuild",
+    "stub": "unbuild --stub",
+    "lint": "oxlint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@fibber/catalog": "workspace:*",
+    "@fibber/core": "workspace:*",
+    "@fibber/schema": "workspace:*"
+  }
+}

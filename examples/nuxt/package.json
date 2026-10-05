@@ -1,0 +1,23 @@
+{
+  "name": "@fibber/example-nuxt",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "prepare": "nuxt prepare",
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "typecheck": "nuxt typecheck"
+  },
+  "dependencies": {
+    "@fibber/nuxt": "workspace:*",
+    "fibber": "workspace:*",
+    "nuxt": "^4.4.6",
+    "vue": "^3.5.35"
+  },
+  "devDependencies": {
+    "@fibber/kit": "workspace:*",
+    "vue-tsc": "^3.3.5"
+  }
+}

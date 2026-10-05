@@ -1,0 +1,14 @@
+{
+  "greeting": {
+    "defaultMessage": "Hello, {name}!",
+    "description": "Greets the visitor by the name they typed."
+  },
+  "inbox": {
+    "defaultMessage": "{count, plural, =0 {No new messages} one {# new message} other {# new messages}}",
+    "description": "Unread count; the visitor changes the number."
+  },
+  "invite": {
+    "defaultMessage": "{gender, select, female {She invited you} male {He invited you} other {They invited you}}",
+    "description": "Who sent an invitation."
+  }
+}

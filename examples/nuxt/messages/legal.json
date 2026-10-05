@@ -1,0 +1,6 @@
+{
+  "terms": {
+    "defaultMessage": "By continuing you accept the <link>terms of service</link>.",
+    "description": "Legal line; the tag becomes a link."
+  }
+}

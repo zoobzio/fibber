@@ -1,0 +1,53 @@
+{
+  "name": "@fibber/kit",
+  "version": "0.0.0",
+  "description": "Build kit: enumerated content to per-locale JSON and typed modules",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zoobzio/fibber.git",
+    "directory": "packages/kit"
+  },
+  "type": "module",
+  "main": "./.dist/index.mjs",
+  "types": "./.dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./.dist/index.d.ts",
+      "import": "./.dist/index.mjs"
+    }
+  },
+  "bin": {
+    "fibber": "./bin/fibber.mjs"
+  },
+  "files": [
+    ".dist",
+    "bin"
+  ],
+  "scripts": {
+    "build": "unbuild",
+    "stub": "unbuild --stub",
+    "lint": "oxlint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@fibber/schema": "workspace:*",
+    "@formatjs/icu-messageformat-parser": "^3.5.20",
+    "jiti": "^2.7.0",
+    "objectively": "^0.1.1"
+  },
+  "peerDependencies": {
+    "@fibber/translate": "workspace:*"
+  },
+  "peerDependenciesMeta": {
+    "@fibber/translate": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@fibber/translate": "workspace:*",
+    "@types/node": "^25.9.9",
+    "intl-messageformat": "^12.1.2"
+  }
+}

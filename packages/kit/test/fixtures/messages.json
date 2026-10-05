@@ -1,0 +1,22 @@
+{
+  "greeting": {
+    "defaultMessage": "Hello, {name}!",
+    "description": "Greets the signed-in user by name."
+  },
+  "title": {
+    "defaultMessage": "Welcome"
+  },
+  "inbox": {
+    "defaultMessage": "{count, plural, one {# new message} other {# new messages}}",
+    "description": "Unread count in the header."
+  },
+  "invite": {
+    "defaultMessage": "{gender, select, female {She invited you} male {He invited you} other {They invited you}} on {at, date, ::yMMMd}"
+  },
+  "total": {
+    "defaultMessage": "{amount, number, price} due {due, date, long}"
+  },
+  "terms": {
+    "defaultMessage": "Read the <link>terms</link>"
+  }
+}

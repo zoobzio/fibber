@@ -1,0 +1,5 @@
+{
+  "greeting": "Hallo, {name}!",
+  "inbox": "{count, plural, =0 {Keine neuen Nachrichten} one {# neue Nachricht} other {# neue Nachrichten}}",
+  "invite": "{gender, select, female {Sie hat dich eingeladen} male {Er hat dich eingeladen} other {Du wurdest eingeladen}}"
+}

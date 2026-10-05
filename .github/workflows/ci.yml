@@ -1,0 +1,119 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# Cancel a superseded run when new commits land on the same ref.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # Build every package to its .dist once and share it with the downstream
+  # typecheck and test jobs — .dist output is Node-independent, so there is no
+  # need to rebuild it per matrix entry. .dist is a dotfile dir, so the upload
+  # must opt into hidden files or the artifact comes back empty.
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: pnpm build
+      - name: Upload build output
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 1
+          path: |
+            packages/*/.dist
+            integrations/*/.dist
+
+  # Lint and format read source only (no type-aware rules, no cross-package
+  # resolution), so they run immediately without waiting on the build.
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: pnpm lint
+
+  format:
+    name: Format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: pnpm inspect
+
+  # Downstream packages resolve @fibber/* to sibling .dist type declarations,
+  # so typecheck needs the build artifact; nuxt prepare generates the example
+  # types it also reads.
+  typecheck:
+    name: Typecheck
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Download build output
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+      - run: pnpm -r prepare
+      - run: pnpm typecheck
+
+  # Only the tests exercise runtime behaviour, so they alone fan out across the
+  # supported Node versions. The rest of the gate is Node-independent.
+  test:
+    name: Test (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ["22", "24", "25"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Download build output
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+      - run: pnpm -r prepare
+      - run: pnpm test
+
+  # A single aggregated coverage pass on the pinned Node version — the matrix
+  # already proves the suite passes everywhere, so there is no value in
+  # uploading identical coverage per version. Runs the federated root vitest
+  # config, which emits .coverage/lcov.info for the Codecov upload.
+  coverage:
+    name: Coverage
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Download build output
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+      - run: pnpm -r prepare
+      - run: pnpm coverage
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: .coverage/lcov.info
+          fail_ci_if_error: false

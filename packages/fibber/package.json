@@ -1,5 +1,5 @@
 {
-  "name": "fibber",
+  "name": "fibber-lang",
   "version": "0.0.0",
   "description": "Umbrella package for the Fibber runtime",
   "license": "MIT",

@@ -4,7 +4,7 @@ import type {
   Definition,
   Kind,
   Locale,
-  Message,
+  Key,
   Schema,
 } from "@fibber/schema";
 import type { Formatters } from "intl-messageformat";
@@ -248,27 +248,27 @@ export const makeFibber = <D extends Definition>(
   };
 
   /** The compiled message the active locale holds under a key, if any. */
-  const lookup = (message: Message<D>): Ast | undefined => {
+  const lookup = (key: Key<D>): Ast | undefined => {
     const messages = proxy.messages;
-    if (!Object.hasOwn(messages, message)) {
+    if (!Object.hasOwn(messages, key)) {
       return undefined;
     }
-    return messages[message];
+    return messages[key];
   };
 
   const locales = () => definition.locales;
 
-  const has = (message: Message<D>) => lookup(message) !== undefined;
+  const has = (key: Key<D>) => lookup(key) !== undefined;
 
   /**
    * Formats a message in the active locale: shared tag handlers under the
    * call's own values, the formatter's parts joined to one string.
    */
-  const format = (message: Message<D>, values?: unknown): string => {
+  const render = (key: Key<D>, values?: unknown): string => {
     const locale = proxy.locale;
-    const ast = lookup(message);
+    const ast = lookup(key);
     if (ast === undefined) {
-      return options.onMissing?.(message, locale) ?? message;
+      return options.onMissing?.(key, locale) ?? key;
     }
     try {
       const result = formatter(locale, ast).format<string>({
@@ -278,11 +278,23 @@ export const makeFibber = <D extends Definition>(
       return Array.isArray(result) ? result.join("") : result;
     } catch (error) {
       if (options.onError) {
-        return options.onError(error, message, locale);
+        return options.onError(error, key, locale);
       }
       throw error;
     }
   };
+
+  // Both signatures of `Format` come to a key and its values: written out,
+  // or held as one message — a key alone, or a key and values in a list. The
+  // types prove the pairing at the call site; in here it is only arguments.
+  const resolve = (head: unknown, values?: unknown): string => {
+    if (Array.isArray(head)) {
+      return render(head[0], head[1]);
+    }
+    return render(head as Key<D>, values);
+  };
+
+  const format: Fibber<D>["format"] = resolve;
 
   /**
    * The groups of the contract — every prefix messages nest under, the root
@@ -290,9 +302,9 @@ export const makeFibber = <D extends Definition>(
    * message key is a level: `checkout.cart.title` sits in `checkout.cart.`.
    */
   const groups = new Map<string, Set<string>>();
-  for (const message of definition.messages) {
+  for (const key of definition.messages) {
     let prefix = "";
-    for (const segment of message.split(".")) {
+    for (const segment of key.split(".")) {
       let names = groups.get(prefix);
       if (names === undefined) {
         names = new Set();
@@ -309,6 +321,10 @@ export const makeFibber = <D extends Definition>(
    * neither reads as `undefined`: the resolver stays inert to whatever
    * probes it (`then`, framework internals) rather than answering as a
    * message.
+   *
+   * The root is also a function — `$t("checkout.cart.title", values)` — that
+   * formats by key, exactly as `format` does, written out or from a message
+   * held as data; a group is only an object.
    */
   const functions = new Map<string, (values?: unknown) => string>();
   const levels = new Map<string, object>();
@@ -320,18 +336,24 @@ export const makeFibber = <D extends Definition>(
     const names = groups.get(prefix) ?? new Set<string>();
     const holds = (property: string | symbol): property is string =>
       typeof property === "string" && names.has(property);
-    const made = new Proxy(Object.create(null) as object, {
+    const root = prefix === "";
+    // Only a function target can be called; an arrow has no own property a
+    // proxy is bound to report.
+    const target: object = root ? () => undefined : Object.create(null);
+    const made = new Proxy(target, {
+      apply: (_target, _self, [head, values]: unknown[]) =>
+        resolve(head, values),
       get: (_target, property) => {
         if (!holds(property)) {
           return undefined;
         }
         const key = `${prefix}${property}`;
-        if (!schema.check.message(key)) {
+        if (!schema.check.key(key)) {
           return level(`${key}.`);
         }
         let found = functions.get(key);
         if (found === undefined) {
-          found = (values) => format(key, values);
+          found = (values) => render(key, values);
           functions.set(key, found);
         }
         return found;

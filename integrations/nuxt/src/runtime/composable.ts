@@ -26,8 +26,8 @@ export const useFibber = (): AppFibber => {
 
 /**
  * Composable for the app's messages as functions — the same object templates
- * reach as `$t`: `t.greeting({ name })`. Each call formats in the locale
- * active at that moment.
+ * reach as `$t`: `t.greeting({ name })`, or by key, `t("greeting", { name })`.
+ * An `AppFibberMessage` held as data goes in whole: `t(message)`. Each call formats in the locale active at that moment.
  */
 export const useT = (): AppFibberResolver => {
   const { $t } = useNuxtApp();

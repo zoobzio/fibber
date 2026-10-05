@@ -46,9 +46,9 @@ const index = (core: Core): OutputFile[] => {
       `export const locales = Object.freeze(${json(core.locales)});`,
       `export const messages = Object.freeze(${json(keys)});`,
       "const knownLocales = new Set(locales);",
-      "const knownMessages = new Set(messages);",
+      "const knownKeys = new Set(messages);",
       `export const isLocale = (value) => typeof value === "string" && knownLocales.has(value);`,
-      `export const isMessage = (value) => typeof value === "string" && knownMessages.has(value);`,
+      `export const isKey = (value) => typeof value === "string" && knownKeys.has(value);`,
       `export const documents = Object.freeze(${json(core.documents)});`,
       `export const formats = Object.freeze(${json(core.formats)});`,
       "export const contract = Object.freeze({ locale, locales, messages, formats });",
@@ -56,21 +56,21 @@ const index = (core: Core): OutputFile[] => {
     [
       banner(),
       `export type Locale =${union(core.locales)};`,
-      `export type Message =${union(keys)};`,
+      `export type Key =${union(keys)};`,
       `export type Document =${union(core.documents)};`,
       members.length === 0
         ? "export interface Arguments {}"
         : `export interface Arguments {\n${members.join("\n")}\n}`,
       `export declare const locale: ${JSON.stringify(core.locale)};`,
       "export declare const locales: readonly Locale[];",
-      "export declare const messages: readonly Message[];",
+      "export declare const messages: readonly Key[];",
       "export declare const documents: readonly Document[];",
       "export declare const isLocale: (value: unknown) => value is Locale;",
-      "export declare const isMessage: (value: unknown) => value is Message;",
+      "export declare const isKey: (value: unknown) => value is Key;",
       "export declare const contract: {",
       `  readonly locale: ${JSON.stringify(core.locale)};`,
       "  readonly locales: readonly Locale[];",
-      "  readonly messages: readonly Message[];",
+      "  readonly messages: readonly Key[];",
       ...formats(core.formats),
       "  /** Never present at runtime; carries each message's values in the types. */",
       "  readonly arguments?: Arguments;",
@@ -138,8 +138,8 @@ const content = (core: Core): OutputFile[] => {
 /**
  * Emits every file a build produces —
  *
- * - `index` — the `Locale` / `Message` / `Arguments` types, the locale and
- *   message lists, `isLocale`, `isMessage`, and the `contract` for
+ * - `index` — the `Locale` / `Key` / `Arguments` types, the locale and
+ *   message lists, `isLocale`, `isKey`, and the `contract` for
  *   `makeFibber`
  * - `bundles` — a lazy loader per locale, for bundlers to split on
  * - `locales/<locale>.mjs` — each locale's bundle of compiled messages

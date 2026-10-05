@@ -1,0 +1,6 @@
+{
+  "solo": "Solo",
+  "team": "Team",
+  "seats": "{count, plural, one {# Platz} other {Bis zu # Plätze}}",
+  "price": "{amount, number, price} pro Monat"
+}

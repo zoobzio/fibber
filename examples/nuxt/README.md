@@ -1,8 +1,8 @@
 # Nuxt example
 
 A Nuxt app translated with Fibber: one locale per visitor, a language and
-time zone picker, typed messages through `$t`, the formatting helpers, and a
-Markdown document per locale.
+time zone picker, typed messages through `$t`, messages configured as data,
+the formatting helpers, and a Markdown document per locale.
 
 ```sh
 pnpm build              # from the repo root: build the packages first
@@ -16,4 +16,8 @@ pnpm --filter @fibber/example-nuxt dev
   by hand and checked in; one message and the German document are left
   untranslated to show the fallback
 - `content/` — the Markdown content, in English
+- `app/app.config.ts` — the page's sections and plans as data, each message
+  a key (`"plan.team"`) or a key with its values
+  (`["plan.seats", { count: 25 }]`), checked against the contract and
+  resolved with `$t(message)`
 - `app/app.vue` — everything the page does

@@ -2,7 +2,7 @@
 // module, in the shape `@fibber/kit` emits for the stub messages.
 export type Locale = "en" | "fr" | "pt-BR";
 export type Document = "intro.md" | "guide/start.md";
-export type Message = "greeting" | "title" | "inbox" | "seen";
+export type Key = "greeting" | "title" | "inbox" | "seen";
 export interface Arguments {
   greeting: { name: string | number };
   title: Record<never, never>;
@@ -12,7 +12,7 @@ export interface Arguments {
 export declare const contract: {
   readonly locale: "en";
   readonly locales: readonly Locale[];
-  readonly messages: readonly Message[];
+  readonly messages: readonly Key[];
   readonly formats: {
     readonly number: Record<never, never>;
     readonly date: Record<never, never>;

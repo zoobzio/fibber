@@ -29,8 +29,8 @@ describe("defineSchema", () => {
     expect(schema.check.locale("fr")).toBe(true);
     expect(schema.check.locale("de")).toBe(false);
     expect(schema.check.locale(7)).toBe(false);
-    expect(schema.check.message("title")).toBe(true);
-    expect(schema.check.message("toString")).toBe(false);
+    expect(schema.check.key("title")).toBe(true);
+    expect(schema.check.key("toString")).toBe(false);
   });
 
   it("accepts a bundle holding any part of the contract", () => {
@@ -82,6 +82,6 @@ describe("defineSchema", () => {
     expect(() => schema.assert.locale("de")).toThrow(
       '"de" is not a locale of the contract',
     );
-    expect(() => schema.assert.message("nope")).toThrow(SchemaError);
+    expect(() => schema.assert.key("nope")).toThrow(SchemaError);
   });
 });

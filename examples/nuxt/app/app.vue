@@ -9,6 +9,10 @@ if (fibber.config.timeZone === undefined) {
   fibber.setTimeZone("UTC");
 }
 
+// The sections and the plans are data: each carries its messages as keys
+// with their values, resolved in the template with `$t(message)`.
+const { sections, plans } = useAppConfig();
+
 const name = ref("Ada");
 const count = ref(2);
 const zones = ["UTC", "America/New_York", "Europe/Paris", "Asia/Tokyo"];
@@ -58,7 +62,18 @@ const { data: welcome } = await useDocument("welcome.md");
       </label>
     </p>
 
-    <h2>Messages</h2>
+    <nav>
+      <a
+        v-for="section in sections"
+        :key="section.id"
+        :href="`#${section.id}`"
+        :data-test="`nav-${section.id}`"
+      >
+        {{ $t(section.title) }}
+      </a>
+    </nav>
+
+    <h2 id="messages">{{ $t.section.messages() }}</h2>
     <p data-test="greeting">
       <input v-model="name" /> {{ $t.account.greeting({ name }) }}
     </p>
@@ -73,7 +88,7 @@ const { data: welcome } = await useDocument("welcome.md");
     <p data-test="terms" v-html="$t.legal.terms({ link })" />
     <p data-test="pending">{{ $t.page.pending() }}</p>
 
-    <h2>Helpers</h2>
+    <h2 id="helpers">{{ $t.section.helpers() }}</h2>
     <ul>
       <li data-test="number">{{ fibber.number(1234567.891) }}</li>
       <li data-test="date">{{ fibber.date(at, "full") }}</li>
@@ -81,7 +96,21 @@ const { data: welcome } = await useDocument("welcome.md");
       <li data-test="list">{{ fibber.list(["HTML", "CSS", "JS"]) }}</li>
     </ul>
 
-    <h2>Content</h2>
+    <h2 id="plans">{{ $t.section.plans() }}</h2>
+    <section
+      v-for="plan in plans"
+      :key="plan.id"
+      :data-test="`plan-${plan.id}`"
+    >
+      <h3>{{ $t(plan.name) }}</h3>
+      <ul>
+        <li v-for="(feature, index) in plan.features" :key="index">
+          {{ $t(feature) }}
+        </li>
+      </ul>
+    </section>
+
+    <h2 id="content">{{ $t.section.content() }}</h2>
     <pre data-test="content">{{ welcome }}</pre>
   </main>
 </template>

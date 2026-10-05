@@ -1,13 +1,6 @@
 import { record } from "objectively";
 
-import type {
-  Bundle,
-  Definition,
-  Issue,
-  Locale,
-  Message,
-  Schema,
-} from "./types";
+import type { Bundle, Definition, Issue, Key, Locale, Schema } from "./types";
 import { SchemaError } from "./error";
 
 /**
@@ -55,7 +48,7 @@ export const defineSchema = <D extends Definition>(
         { message: `${JSON.stringify(value)} is not a locale of the contract` },
       ];
     },
-    message: (value: unknown): Issue[] => {
+    key: (value: unknown): Issue[] => {
       if (messages.has(value)) {
         return [];
       }
@@ -121,8 +114,7 @@ export const defineSchema = <D extends Definition>(
     definition,
     check: {
       locale: (value): value is Locale<D> => inspect.locale(value).length === 0,
-      message: (value): value is Message<D> =>
-        inspect.message(value).length === 0,
+      key: (value): value is Key<D> => inspect.key(value).length === 0,
       bundle: (value): value is Bundle<D> => inspect.bundle(value).length === 0,
       timeZone: (value): value is string =>
         settings.timeZone(value).length === 0,
@@ -131,7 +123,7 @@ export const defineSchema = <D extends Definition>(
     },
     assert: {
       locale: (value) => assert(inspect.locale(value)),
-      message: (value) => assert(inspect.message(value)),
+      key: (value) => assert(inspect.key(value)),
       bundle: (value) => assert(inspect.bundle(value)),
       timeZone: (value) => assert(settings.timeZone(value)),
       convention: (value) => assert(settings.convention(value)),

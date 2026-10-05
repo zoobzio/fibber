@@ -1,10 +1,10 @@
-import type { Bundle } from "@fibber/schema";
+import type { Bundle, Key } from "@fibber/schema";
 
 import { FORMATS } from "@fibber/schema";
 import { IntlMessageFormat } from "intl-messageformat";
 import { describe, expect, expectTypeOf, it, vi } from "vitest";
 
-import type { Config } from "../src/types";
+import type { Message, Config } from "../src/types";
 import {
   InvalidBundleError,
   InvalidConventionError,
@@ -171,7 +171,7 @@ describe("createResolver", () => {
   it("cannot be written to", () => {
     const $t = makeFibber(contract, container()).createResolver();
     expect(() => {
-      ($t as Record<string, unknown>).title = () => "x";
+      ($t as unknown as Record<string, unknown>).title = () => "x";
     }).toThrow(TypeError);
     expect($t.title()).toBe("Welcome");
   });
@@ -215,6 +215,101 @@ describe("createResolver", () => {
       $t.checkout.cart.nope();
     };
     expect(misuse).toBeTypeOf("function");
+  });
+
+  it("resolves a message by its key when called", () => {
+    const fibber = makeFibber(nested, { locale: "en", messages: nestedEn });
+    const $t = fibber.createResolver();
+    expect($t("title")).toBe("Welcome");
+    expect($t("checkout.total", { amount: 5 })).toBe("Total: 5");
+    expect($t("checkout.cart.items", { count: 2 })).toBe(
+      $t.checkout.cart.items({ count: 2 }),
+    );
+    expect(Object.keys($t)).toEqual(["title", "checkout"]);
+  });
+
+  it("types a call by key off the contract", () => {
+    const $t = makeFibber(nested, {
+      locale: "en",
+      messages: nestedEn,
+    }).createResolver();
+    expectTypeOf($t("checkout.cart.empty")).toEqualTypeOf<string>();
+    // Compiled, never run: each line must be a type error.
+    const misuse = () => {
+      // @ts-expect-error a message that takes values cannot be called without
+      $t("checkout.cart.items");
+      // @ts-expect-error count is a number
+      $t("checkout.cart.items", { count: "2" });
+      // @ts-expect-error a group is not a message
+      $t("checkout.cart");
+      // @ts-expect-error not a message of the contract
+      $t("nope");
+    };
+    expect(misuse).toBeTypeOf("function");
+  });
+
+  it("resolves a message held as data", () => {
+    const fibber = makeFibber(nested, { locale: "en", messages: nestedEn });
+    const $t = fibber.createResolver();
+    const messages: Message<typeof nested>[] = [
+      "title",
+      ["checkout.cart.items", { count: 2 }],
+    ];
+    expect(messages.map((message) => $t(message))).toEqual([
+      "Welcome",
+      "2 items",
+    ]);
+    expect(messages.map((message) => fibber.format(message))).toEqual([
+      "Welcome",
+      "2 items",
+    ]);
+  });
+
+  it("pairs each key of a message with its own values", () => {
+    const $t = makeFibber(nested, {
+      locale: "en",
+      messages: nestedEn,
+    }).createResolver();
+    expectTypeOf<Message<typeof nested>>().toEqualTypeOf<
+      | "title"
+      | [key: "checkout.total", values: { amount: number }]
+      | "checkout.cart.empty"
+      | [key: "checkout.cart.items", values: { count: number }]
+    >();
+    // Compiled, never run: each line must be a type error.
+    const misuse = (
+      key: Key<typeof nested>,
+      plain: "title" | "checkout.cart.empty",
+    ) => {
+      // A key of messages that all take nothing is safe on its own.
+      $t(plain);
+      // @ts-expect-error a key of any message may be one that takes values
+      $t(key);
+      // @ts-expect-error a message that takes values cannot be held without
+      const bare: Message<typeof nested> = "checkout.cart.items";
+      // @ts-expect-error nor as a list of its key alone
+      const short: Message<typeof nested> = ["checkout.cart.items"];
+      // @ts-expect-error the values of another message
+      const mixed: Message<typeof nested> = ["checkout.total", { count: 2 }];
+      // @ts-expect-error a message that takes none
+      const extra: Message<typeof nested> = ["title", { count: 2 }];
+      return [bare, short, mixed, extra];
+    };
+    expect(misuse).toBeTypeOf("function");
+  });
+
+  it("resolves by key through the active locale and the options", () => {
+    const onMissing = vi.fn(() => "…");
+    const fibber = makeFibber(contract, container(), {
+      onMissing,
+      tags: { link: (chunks) => `<a>${chunks.join("")}</a>` },
+    });
+    const $t = fibber.createResolver();
+    expect($t("terms", undefined as never)).toBe("Read the <a>terms</a>");
+    fibber.apply("fr", { title: fr.title });
+    expect($t("title")).toBe("Bienvenue");
+    expect($t("greeting", { name: "Ada" })).toBe("…");
+    expect(onMissing).toHaveBeenCalledWith("greeting", "fr");
   });
 
   it("hands out stable groups that answer only for what they hold", () => {

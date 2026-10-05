@@ -1,5 +1,13 @@
 import type { Contract, Document } from "#build/fibber/index.mjs";
-import type { Bundle, Config, Fibber, Locale, Resolver } from "fibber-lang";
+import type {
+  Bundle,
+  Config,
+  Fibber,
+  Key,
+  Locale,
+  Message,
+  Resolver,
+} from "fibber-lang";
 
 /**
  * The active contract: the `Contract` the build-time `index` module declares
@@ -11,6 +19,17 @@ export type AppFibberContract = Contract;
  * A locale the app is built for.
  */
 export type AppFibberLocale = Locale<AppFibberContract>;
+
+/**
+ * The key of a message of the app.
+ */
+export type AppFibberKey = Key<AppFibberContract>;
+
+/**
+ * A message of the app — its key, with the values it takes when it takes
+ * any — as data a component can be handed and resolve: `$t(message)`.
+ */
+export type AppFibberMessage = Message<AppFibberContract>;
 
 /**
  * A content document the app is built with, by its path.

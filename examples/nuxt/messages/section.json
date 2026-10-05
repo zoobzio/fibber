@@ -1,0 +1,18 @@
+{
+  "messages": {
+    "defaultMessage": "Messages",
+    "description": "Heading of the section showing messages, and its link in the page navigation."
+  },
+  "helpers": {
+    "defaultMessage": "Helpers",
+    "description": "Heading of the section showing the formatting helpers, and its link in the page navigation."
+  },
+  "plans": {
+    "defaultMessage": "Plans",
+    "description": "Heading of the section listing the plans, and its link in the page navigation."
+  },
+  "content": {
+    "defaultMessage": "Content",
+    "description": "Heading of the section showing a Markdown document, and its link in the page navigation."
+  }
+}

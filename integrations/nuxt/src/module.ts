@@ -95,6 +95,8 @@ export default defineNuxtModule<NuxtFibberConfig>({
       ...[
         "AppFibberContract",
         "AppFibberLocale",
+        "AppFibberKey",
+        "AppFibberMessage",
         "AppFibberDocument",
         "AppFibberBundle",
         "AppFibberConfig",

@@ -34,7 +34,7 @@ describe("generate", () => {
       export type Locale =
         | "en"
         | "fr";
-      export type Message =
+      export type Key =
         | "greeting"
         | "title"
         | "inbox"
@@ -74,14 +74,14 @@ describe("generate", () => {
       }
       export declare const locale: "en";
       export declare const locales: readonly Locale[];
-      export declare const messages: readonly Message[];
+      export declare const messages: readonly Key[];
       export declare const documents: readonly Document[];
       export declare const isLocale: (value: unknown) => value is Locale;
-      export declare const isMessage: (value: unknown) => value is Message;
+      export declare const isKey: (value: unknown) => value is Key;
       export declare const contract: {
         readonly locale: "en";
         readonly locales: readonly Locale[];
-        readonly messages: readonly Message[];
+        readonly messages: readonly Key[];
         readonly formats: {
           readonly number: { readonly "price": Intl.NumberFormatOptions };
           readonly date: Record<never, never>;
@@ -106,8 +106,8 @@ describe("generate", () => {
     expect(module.messages).toContain("greeting");
     expect(module.isLocale("fr")).toBe(true);
     expect(module.isLocale("de")).toBe(false);
-    expect(module.isMessage("greeting")).toBe(true);
-    expect(module.isMessage(7)).toBe(false);
+    expect(module.isKey("greeting")).toBe(true);
+    expect(module.isKey(7)).toBe(false);
     expect(module.contract).toEqual({
       locale: "en",
       locales: ["en", "fr"],
@@ -147,7 +147,7 @@ describe("generate", () => {
     const dts = output.files.find(
       (candidate) => candidate.path === "index.d.mts",
     );
-    expect(dts?.contents).toContain("export type Message = never;");
+    expect(dts?.contents).toContain("export type Key = never;");
     expect(dts?.contents).toContain("export interface Arguments {}");
   });
 });

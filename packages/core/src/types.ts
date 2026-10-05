@@ -2,7 +2,7 @@ import type {
   Bundle,
   Definition,
   Locale,
-  Message,
+  Key,
   Named,
   Schema,
   Values,
@@ -81,13 +81,13 @@ export type Options<D extends Definition> = {
    * What a message resolves to when the active locale does not hold it — its
    * part of the bundle is not loaded yet. Defaults to the message key.
    */
-  onMissing?: (message: Message<D>, locale: Locale<D>) => string;
+  onMissing?: (key: Key<D>, locale: Locale<D>) => string;
 
   /**
    * What a message resolves to when formatting it throws — a value missing
    * or of the wrong kind. Defaults to rethrowing.
    */
-  onError?: (error: unknown, message: Message<D>, locale: Locale<D>) => string;
+  onError?: (error: unknown, key: Key<D>, locale: Locale<D>) => string;
 };
 
 /**
@@ -95,7 +95,7 @@ export type Options<D extends Definition> = {
  * nothing when it takes none. A contract with no `arguments` carrier accepts
  * any values, or none.
  */
-export type Args<D extends Definition, K extends Message<D>> = [
+export type Args<D extends Definition, K extends Key<D>> = [
   keyof Values<D, K>,
 ] extends [never]
   ? []
@@ -104,13 +104,48 @@ export type Args<D extends Definition, K extends Message<D>> = [
     : [values: Values<D, K>];
 
 /**
+ * A message as one piece of data: its key alone when it takes no values —
+ * `"title"` — and its key with its values when it does —
+ * `["greeting", { name }]`. Each key is paired with its own values, so a
+ * message can be held, passed around and resolved later — `$t(message)` —
+ * as safely as one written out.
+ */
+export type Message<D extends Definition> = {
+  [K in Key<D>]:
+    | ([] extends Args<D, K> ? K : never)
+    | (Args<D, K> extends [] ? never : [key: K, ...args: Args<D, K>]);
+}[Key<D>];
+
+/** Whether a key type is more than one key — a union, not a single message. */
+type Several<K, U = K> = K extends unknown
+  ? [U] extends [K]
+    ? false
+    : true
+  : never;
+
+/**
+ * Resolves a message by its key, two ways. Written out —
+ * `("greeting", { name })` — the values are typed off the one key named; a
+ * key that could be any of several messages is refused here, since no one
+ * set of values fits them all. Held as data, a {@link Message} is passed
+ * whole.
+ */
+export type Format<D extends Definition> = {
+  <K extends Key<D>>(
+    key: K,
+    ...args: Several<K> extends true ? never : Args<D, K>
+  ): string;
+  (message: Message<D>): string;
+};
+
+/**
  * One level of a {@link Resolver}: a function for every name that completes
  * a message key, and the next level for every name that is a group. `K` is
  * what is left of the keys below the prefix `P`.
  */
 type Tree<D extends Definition, K extends string, P extends string = ""> = {
   readonly [H in Exclude<K, `${string}.${string}`>]: (
-    ...args: Args<D, `${P}${H}` & Message<D>>
+    ...args: Args<D, `${P}${H}` & Key<D>>
   ) => string;
 } & {
   readonly [H in K extends `${infer S}.${string}` ? S : never]: Tree<
@@ -125,8 +160,13 @@ type Tree<D extends Definition, K extends string, P extends string = ""> = {
  * in a key is a level of the object, so the message `checkout.cart.title`
  * is `$t.checkout.cart.title()`. Each call formats the message in the
  * locale active at that moment.
+ *
+ * The resolver is itself a function that takes the whole key:
+ * `$t("checkout.cart.title")`, `$t("greeting", { name })` — the same
+ * message, values and result as the nested call. A {@link Message} held as
+ * data goes in whole: `$t(message)`.
  */
-export type Resolver<D extends Definition> = Tree<D, Message<D>>;
+export type Resolver<D extends Definition> = Tree<D, Key<D>> & Format<D>;
 
 /**
  * A runtime translation service over a contract. It holds one locale at a
@@ -152,18 +192,18 @@ export interface Fibber<D extends Definition> {
   /**
    * Whether the active locale holds a message.
    */
-  has: (message: Message<D>) => boolean;
+  has: (key: Key<D>) => boolean;
 
   /**
    * Formats a message in the active locale. A message the active locale does
    * not hold resolves through `onMissing`; a formatting failure through
-   * `onError`.
+   * `onError`. Takes a key and its values, or a {@link Message}.
    */
-  format: <K extends Message<D>>(message: K, ...args: Args<D, K>) => string;
+  format: Format<D>;
 
   /**
-   * The messages as an object of functions — what an app assigns to `$t`.
-   * Every resolver of a service is the same object.
+   * The messages as an object of functions, itself callable by key — what an
+   * app assigns to `$t`. Every resolver of a service is the same object.
    */
   createResolver: () => Resolver<D>;
 

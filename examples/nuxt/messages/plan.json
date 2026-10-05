@@ -1,0 +1,18 @@
+{
+  "solo": {
+    "defaultMessage": "Solo",
+    "description": "Name of the plan for one person."
+  },
+  "team": {
+    "defaultMessage": "Team",
+    "description": "Name of the plan for a group."
+  },
+  "seats": {
+    "defaultMessage": "{count, plural, one {# seat} other {Up to # seats}}",
+    "description": "How many people a plan covers."
+  },
+  "price": {
+    "defaultMessage": "{amount, number, price} per month",
+    "description": "What a plan costs each month, in the `price` named format."
+  }
+}

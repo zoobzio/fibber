@@ -49,8 +49,8 @@ export interface Definition {
 /** The locales of a contract. */
 export type Locale<D extends Definition> = D["locales"][number];
 
-/** The message keys of a contract. */
-export type Message<D extends Definition> = D["messages"][number];
+/** The message keys of a contract: what each message goes by. */
+export type Key<D extends Definition> = D["messages"][number];
 
 /**
  * The names a format of one kind goes by: the built-in ones, and the ones the
@@ -68,7 +68,7 @@ export type Named<D extends Definition, K extends Kind> =
  */
 export type Values<
   D extends Definition,
-  K extends Message<D>,
+  K extends Key<D>,
 > = K extends keyof NonNullable<D["arguments"]>
   ? NonNullable<D["arguments"]>[K]
   : Record<string, unknown>;
@@ -78,7 +78,7 @@ export type Values<
  * an app may hold the whole locale or only the part it has loaded.
  */
 export type Bundle<D extends Definition> = {
-  [K in Message<D>]?: Ast;
+  [K in Key<D>]?: Ast;
 };
 
 /** One reason a value is not what the contract asks for. */
@@ -100,7 +100,7 @@ export interface Schema<D extends Definition> {
 
   check: {
     locale: (value: unknown) => value is Locale<D>;
-    message: (value: unknown) => value is Message<D>;
+    key: (value: unknown) => value is Key<D>;
     bundle: (value: unknown) => value is Bundle<D>;
     timeZone: (value: unknown) => value is string;
     convention: (value: unknown) => value is string;
@@ -108,7 +108,7 @@ export interface Schema<D extends Definition> {
 
   assert: {
     locale: (value: unknown) => asserts value is Locale<D>;
-    message: (value: unknown) => asserts value is Message<D>;
+    key: (value: unknown) => asserts value is Key<D>;
     bundle: (value: unknown) => asserts value is Bundle<D>;
     timeZone: (value: unknown) => asserts value is string;
     convention: (value: unknown) => asserts value is string;

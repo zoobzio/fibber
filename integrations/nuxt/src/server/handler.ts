@@ -1,5 +1,5 @@
 import type { EventHandler } from "h3";
-import type { Provider } from "fibber/catalog";
+import type { Provider } from "fibber-lang/catalog";
 
 import { createError, defineEventHandler } from "h3";
 
@@ -7,7 +7,7 @@ import { readTarget } from "./route";
 
 /**
  * Creates the one event handler that serves locale bundles over the catalog
- * wire protocol, so `defineClient` from `fibber/catalog` reads it
+ * wire protocol, so `defineClient` from `fibber-lang/catalog` reads it
  * unchanged:
  *
  * - `GET {base}/locales` answers the entries the source serves

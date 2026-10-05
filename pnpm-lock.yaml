@@ -41,7 +41,7 @@ importers:
       '@fibber/nuxt':
         specifier: workspace:*
         version: link:../../integrations/nuxt
-      fibber:
+      fibber-lang:
         specifier: workspace:*
         version: link:../../packages/fibber
       nuxt:
@@ -63,7 +63,7 @@ importers:
       '@nuxt/kit':
         specifier: ^4.4.6
         version: 4.5.2(magic-string@1.4.2)(magicast@0.5.5)(rolldown@1.2.12)(unplugin@3.4.0(esbuild@0.28.2)(rolldown@1.2.12)(rollup@4.64.0)(vite@8.3.2(@types/node@25.9.9)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)))
-      fibber:
+      fibber-lang:
         specifier: workspace:*
         version: link:../../packages/fibber
       h3:

@@ -1,11 +1,11 @@
 import type { EventHandler } from "h3";
-import type { Provider } from "fibber/catalog";
+import type { Provider } from "fibber-lang/catalog";
 
 import { createApp, createRouter, toWebHandler } from "h3";
 import { describe, it, expect } from "vitest";
 
-import { defineClient, toEntries } from "fibber/catalog";
-import { defineSchema } from "fibber";
+import { defineClient, toEntries } from "fibber-lang/catalog";
+import { defineSchema } from "fibber-lang";
 
 import { createLocaleHandler } from "../../src/server";
 import { contract } from "../../src/stubs/build/fibber/index.mjs";

@@ -113,7 +113,7 @@ const loaders = (core: Core): OutputFile[] => {
     ],
     [
       banner(),
-      'import type { Bundle } from "fibber";',
+      'import type { Bundle } from "fibber-lang";',
       'import type { Contract, Locale } from "./index.mjs";',
       "export declare const bundles: {",
       "  readonly [L in Locale]: () => Promise<Bundle<Contract>>;",

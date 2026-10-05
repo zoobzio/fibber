@@ -1,7 +1,7 @@
 import type { H3Event } from "h3";
 
 import { createError } from "h3";
-import { ROUTE } from "fibber/catalog";
+import { ROUTE } from "fibber-lang/catalog";
 
 /**
  * The segments of a path, empty ones dropped: a leading or trailing slash

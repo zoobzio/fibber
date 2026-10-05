@@ -20,7 +20,7 @@ export default defineBuildConfig({
     "@fibber/kit",
     "@nuxt/kit",
     "@nuxt/schema",
-    "fibber",
+    "fibber-lang",
     "nuxt",
     "vue",
     "h3",

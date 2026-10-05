@@ -6,7 +6,7 @@
   "baseBranch": "main",
   "fixed": [
     [
-      "fibber",
+      "fibber-lang",
       "@fibber/catalog",
       "@fibber/core",
       "@fibber/kit",

@@ -8,14 +8,14 @@ import type {
   SetLocale,
 } from "./types";
 
-import type { Schema } from "fibber";
+import type { Schema } from "fibber-lang";
 
 import { shallowRef } from "vue";
 import { useRequestHeaders } from "#imports";
 import { contract } from "#build/fibber/index.mjs";
 import { bundles } from "#build/fibber/bundles.mjs";
 // The core constructor, renamed: this module's own `makeFibber` wraps it.
-import { defineSchema, makeFibber as makeService } from "fibber";
+import { defineSchema, makeFibber as makeService } from "fibber-lang";
 import { negotiate } from "./negotiate";
 import { onServer } from "./side";
 import { accessFibber } from "./store";

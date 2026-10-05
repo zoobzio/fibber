@@ -1,5 +1,5 @@
 import type { Contract, Document } from "#build/fibber/index.mjs";
-import type { Bundle, Config, Fibber, Locale, Resolver } from "fibber";
+import type { Bundle, Config, Fibber, Locale, Resolver } from "fibber-lang";
 
 /**
  * The active contract: the `Contract` the build-time `index` module declares

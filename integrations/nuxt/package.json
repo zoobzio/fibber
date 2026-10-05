@@ -41,7 +41,7 @@
   },
   "dependencies": {
     "@nuxt/kit": "^4.4.6",
-    "fibber": "workspace:*",
+    "fibber-lang": "workspace:*",
     "h3": "^1.15.11",
     "vue": "^3.5.35"
   },
